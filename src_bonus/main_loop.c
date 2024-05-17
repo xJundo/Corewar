@@ -76,10 +76,25 @@ static int analyse_input(void)
     return 0;
 }
 
+int reste_one_color(void)
+{
+    int color = 0;
+    int count = 0;
+
+    for (nodes_t *tmp = get_vm()->champions; tmp; tmp = tmp->next) {
+        if (color == 0)
+            color = ((champion_t *)tmp->data)->color;
+        if (color != ((champion_t *)tmp->data)->color)
+            return 0;
+        count++;
+    }
+    return count == 1 ? 1 : 0;
+}
+
 int end(void)
 {
     clear();
-    if (list_size(&get_vm()->champions) == 1)
+    if (reste_one_color())
         mvprintw(0, 0, "The player %d(%s) has won.\n",
         ((champion_t *)get_vm()->champions->data)->prog_number,
         ((champion_t *)get_vm()->champions->data)->header->prog_name);
@@ -125,7 +140,7 @@ int main_loop(void)
     init_screen();
     init_color_arena();
     for (int i = CYCLE_TO_DIE; i > 0; i -= CYCLE_DELTA) {
-        if (list_size(&get_vm()->champions) == 1)
+        if (reste_one_color())
             break;
         sort_list_champions();
         loop_prog(&i);

@@ -87,6 +87,8 @@ static void print_champions_status(void)
 
     for (nodes_t *tmp = get_vm()->champions; tmp; tmp = tmp->next) {
         champion = tmp->data;
+        if (champion->parent != NULL)
+            continue;
         attron(COLOR_PAIR(champion->color));
         mvprintw(line, 0, "Champion %d: %s : %d",
         champion->prog_number, champion->header->prog_name,

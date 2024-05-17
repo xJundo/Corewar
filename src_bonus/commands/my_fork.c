@@ -26,7 +26,7 @@ int my_fork(champion_t *champion)
     new_champion->header = champion->header;
     new_champion->parent = champion;
     new_champion->color = champion->color;
-    print_color_cursor((champion->pc + index % IDX_MOD) % MEM_SIZE, 5, 0);
+    print_color_cursor((champion->pc + index % IDX_MOD) % MEM_SIZE, new_champion->color, 1);
     push_b_doubly(&get_vm()->champions, new_champion, UNKNOW);
     return 0;
 }

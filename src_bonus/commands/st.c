@@ -7,10 +7,14 @@
 
 #include "op.h"
 
-void print_color_st(champion_t *champion, char *param, int *beuteu)
+void print_color_st(champion_t *champion, char *param, int *beuteu, int where_to_store)
 {
     print_color_cursor_to_value(champion->pc,
     champion->pc + 1 + beuteu[0] + beuteu[1], champion->color, 1);
+    if (param[1] != 1) {
+        print_color_cursor_to_value(champion->pc + where_to_store % IDX_MOD,
+        champion->pc + where_to_store % IDX_MOD + REG_SIZE, champion->color, 1);
+    }
 }
 
 static void get_where_to_store(champion_t *champion,
@@ -30,6 +34,7 @@ static void get_where_to_store(champion_t *champion,
         set_value(value_to_store, REG_SIZE,
         (champion->pc + where_to_store % IDX_MOD) % MEM_SIZE);
     }
+    print_color_st(champion, param, beuteu, where_to_store);
 }
 
 int my_st(champion_t *champion)
@@ -41,12 +46,10 @@ int my_st(champion_t *champion)
     {BTR(param[0], 0), BTR(param[1], 0)};
     int value_to_store = get_value(beuteu[0], (champion->pc + 2) % MEM_SIZE);
 
-    print_color_st(champion, param, beuteu);
     if (!reg_is_valid(value_to_store))
         return 1;
     value_to_store = champion->reg[value_to_store - 1];
     get_where_to_store(champion, param, value_to_store, beuteu);
-    print_color_st(champion, param, beuteu);
     champion->pc = (champion->pc + beuteu[0] + beuteu[1] + 2) % MEM_SIZE;
     return 0;
 }
